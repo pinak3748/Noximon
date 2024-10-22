@@ -1,0 +1,224 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Hiding scrollbar for Chrome, Safari and Opera */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hiding scrollbar for IE, Edge and Firefox */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 20%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 20%;
+
+    --primary: 215 100% 35%;
+    --primary-foreground: 0 0% 95%;
+
+    --secondary: 142 71% 45%;
+    --secondary-foreground: 0 0% 60%;
+
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 0 0% 40%;
+
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+
+    --destructive: 350 89% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 215 100% 35%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 0 0% 20%;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 20%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 20%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+html {
+  @apply scroll-smooth;
+}
+
+body {
+  @apply bg-neutral-50 text-neutral-950 dark:bg-neutral-900 dark:text-neutral-50;
+  scrollbar-width: thin;
+}
+
+a:not(.exclude) {
+  @apply underline decoration-neutral-300 transition-colors hover:decoration-neutral-600 dark:decoration-neutral-600 dark:hover:decoration-neutral-500;
+}
+
+img,
+button {
+  @apply select-none;
+}
+
+::selection {
+  @apply bg-neutral-950 text-neutral-50 dark:bg-neutral-50/10 dark:text-current;
+}
+
+::-webkit-scrollbar {
+  @apply w-1.5;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-neutral-50 dark:bg-neutral-900;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-neutral-400 dark:bg-neutral-800;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply rounded-full bg-neutral-500 dark:bg-neutral-700;
+}
+
+::-moz-range-thumb {
+  @apply h-4 w-4 rounded-full border-none bg-neutral-600 dark:bg-neutral-50;
+}
+
+::-webkit-slider-thumb {
+  @apply h-4 w-4 appearance-none rounded-full border-none bg-neutral-600 dark:bg-neutral-50;
+}
+
+::-moz-range-track {
+  @apply rounded-full bg-white;
+}
+
+::-webkit-slider-runnable-track {
+  @apply bg-white;
+}
+
+.animate-children > * {
+  @apply animate-intro opacity-0;
+}
+
+.animate-children > :nth-child(1) {
+  @apply [animation-delay:200ms];
+}
+
+.animate-children > :nth-child(2) {
+  @apply [animation-delay:250ms];
+}
+
+.animate-children > :nth-child(3) {
+  @apply [animation-delay:300ms];
+}
+
+.animate-children > :nth-child(4) {
+  @apply [animation-delay:350ms];
+}
+
+.animate-children > :nth-child(5) {
+  @apply [animation-delay:400ms];
+}
+
+.animate-children > :nth-child(6) {
+  @apply [animation-delay:450ms];
+}
+
+.animate-children > :nth-child(7) {
+  @apply [animation-delay:500ms];
+}
+
+.animate-children > :nth-child(8) {
+  @apply [animation-delay:550ms];
+}
+
+.animate-children > :nth-child(9) {
+  @apply [animation-delay:600ms];
+}
+
+.animate-children > :nth-child(10) {
+  @apply [animation-delay:650ms];
+}
+
+.animate-children > :nth-child(11) {
+  @apply [animation-delay:700ms];
+}
+
+.animate-children > :nth-child(12) {
+  @apply [animation-delay:750ms];
+}
+
+.animate-children > :nth-child(13) {
+  @apply [animation-delay:800ms];
+}
+
+.animate-children > :nth-child(14) {
+  @apply [animation-delay:850ms];
+}
+
+.animate-children > :nth-child(15) {
+  @apply [animation-delay:900ms];
+}
+
+.animate-children > :nth-child(16) {
+  @apply [animation-delay:950ms];
+}
+
+.animate-children > :nth-child(17) {
+  @apply [animation-delay:1000ms];
+}
+
+.animate-children > :nth-child(n + 18) {
+  @apply [animation-delay:1050ms];
+}
+
+/* Add this at the end of the file */
+@layer utilities {
+  .w-content-main {
+    width: 33%;
+  }
+}
