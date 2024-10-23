@@ -1,6 +1,7 @@
 import { CSSProperties, useEffect, useRef, useState } from 'react';
 
 import clsx from 'clsx';
+import { NotebookTabs } from 'lucide-react';
 
 import { API, CHANNELS, DOCKER, LOGO, PREVIEW, SERVER } from '@/assets';
 import { Button } from '@/components/ui/button';
@@ -127,6 +128,23 @@ export default function Sidebar({
           onPointerLeave={onLeaveNav}
         >
           <div className="space-y-4">
+            <Button
+              key={'guide'}
+              variant="ghost"
+              size="icon"
+              className={clsx(
+                'relative z-10 flex h-fit w-full flex-col gap-1 p-1.5 transition-colors duration-200',
+                hoveredIndex === 4 || 'guide' === selectedOption
+                  ? 'text-[#2e2e2e]'
+                  : 'text-gray-500'
+              )}
+              onClick={() => onOptionSelect('guide')}
+              onPointerEnter={(e) => onEnterButton(e, 4)}
+              ref={(el) => (buttonRefs[4] = el)}
+            >
+              <NotebookTabs className="text-[#5271ff]" />
+              <span className="text-xs">{'Guide'}</span>
+            </Button>
             {sidebarOptions.map((option, index) => (
               <Button
                 key={option.value}

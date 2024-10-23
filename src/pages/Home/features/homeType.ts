@@ -1,4 +1,4 @@
-type Option = 'channels' | 'api' | 'docker' | 'server';
+type Option = 'channels' | 'api' | 'docker' | 'server' | 'guide';
 
 type ApiResponseStatus =
   | '200'

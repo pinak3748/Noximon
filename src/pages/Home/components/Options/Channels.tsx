@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { GMAIL, GOOGLECHAT, SLACK } from '@/assets';
 import { SubSectionHeading } from '@/components/custom';
@@ -13,31 +14,33 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
 import { cn } from '@/lib/utils';
+import { AppDispatch, RootState } from '@/store';
+
+import { setSlackToken } from '../../features/homeSlice';
 
 export default function Channels() {
-  const [slackToken, setSlackToken] = useState('');
-  const [slackStatus, setSlackStatus] = useState<
-    'idle' | 'testing' | 'success'
-  >('idle');
+  const [slackTokenInput, setSlackTokenInput] = useState('');
+  const dispatch = useDispatch<AppDispatch>();
   const { toast } = useToast();
+  const slackToken = useSelector((state: RootState) => state.home.slackToken);
 
-  const testSlackNotification = async () => {
-    setSlackStatus('testing');
-    // Implement the actual API call to test Slack notification here
-    // For now, we'll simulate a successful test after a short delay
-    setTimeout(() => {
-      setSlackStatus('success');
-      toast({
-        title: 'Slack Connected',
-        description:
-          'Your Slack notification channel has been successfully connected.',
-        variant: 'success',
-      });
-    }, 1500);
+  useEffect(() => {
+    if (slackToken) {
+      setSlackTokenInput(slackToken);
+    }
+  }, [slackToken]);
+
+  const handleSave = () => {
+    dispatch(setSlackToken(slackTokenInput));
+    toast({
+      title: 'Slack Token Saved',
+      description: 'Your Slack token has been successfully saved.',
+      variant: 'success',
+    });
   };
 
   return (
-    <div className="text-gray-800">
+    <div className="w-full max-w-full overflow-hidden text-gray-800">
       <SubSectionHeading
         heading="Notification Channels"
         subHeading="Connect and manage your preferred notification channels"
@@ -46,35 +49,38 @@ export default function Channels() {
       <Accordion type="single" collapsible className="mt-4 w-full space-y-4">
         <AccordionItem
           value="slack"
-          className="rounded-lg border border-gray-200 bg-gray-50 p-1.5"
+          className="rounded-lg border border-gray-200 bg-gray-50"
         >
           <AccordionTrigger className="px-4 py-2 hover:no-underline">
-            <div className="flex w-full items-center">
-              <img src={SLACK} alt="Slack" className="mr-2 h-6 w-6" />
-              <span className="text-left">Slack</span>
-              {slackStatus === 'success' && (
+            <div className="flex w-full items-center justify-between">
+              <div className="flex items-center">
+                <img src={SLACK} alt="Slack" className="mr-2 h-6 w-6" />
+                <span className="text-left">Slack</span>
+              </div>
+              {slackToken && (
                 <Badge
                   variant="secondary"
-                  className="ml-2 bg-green-100 text-green-800"
+                  className="mr-2.5 bg-green-200 text-green-800"
                 >
                   Connected
                 </Badge>
               )}
             </div>
           </AccordionTrigger>
-          <AccordionContent className="mt-3 px-4 pb-4">
+          <AccordionContent className="px-4 pb-4">
             <div className="space-y-4">
               <div className="space-y-1">
                 <label className="text-sm font-medium">Access Token</label>
                 <Input
                   placeholder="Enter Slack Access Token"
-                  value={slackToken}
-                  onChange={(e) => setSlackToken(e.target.value)}
+                  value={slackTokenInput}
+                  onChange={(e) => setSlackTokenInput(e.target.value)}
                   className="w-full border-gray-300 focus:border-[#5271ff] focus:ring-[#5271ff]"
+                  type="password"
                 />
               </div>
               <a
-                href="https://api.slack.com/authentication/basics"
+                href="https://api.slack.com/apps/A06F0QUVBDX/incoming-webhooks?success=1"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block text-sm text-[#5271ff] hover:underline"
@@ -83,25 +89,14 @@ export default function Channels() {
               </a>
               <div className="flex space-x-2">
                 <Button
-                  onClick={testSlackNotification}
-                  disabled={!slackToken || slackStatus === 'testing'}
+                  onClick={handleSave}
+                  disabled={!slackTokenInput}
                   className={cn(
                     'w-full bg-[#5271ff] text-white hover:bg-[#3e5bff]',
-                    (!slackToken || slackStatus === 'testing') &&
-                      'cursor-not-allowed opacity-50'
+                    !slackTokenInput && 'cursor-not-allowed opacity-50'
                   )}
                 >
-                  {slackStatus === 'testing' ? 'Testing...' : 'Test Connection'}
-                </Button>
-                <Button
-                  variant="outline"
-                  disabled={slackStatus !== 'success'}
-                  className={cn(
-                    'w-full border-[#5271ff] text-[#5271ff] hover:bg-[#5271ff] hover:text-white',
-                    slackStatus !== 'success' && 'cursor-not-allowed opacity-50'
-                  )}
-                >
-                  Save
+                  {slackToken ? 'Update Token' : 'Save Token'}
                 </Button>
               </div>
             </div>
@@ -110,19 +105,21 @@ export default function Channels() {
 
         <AccordionItem
           value="google-chats"
-          className="rounded-lg border border-gray-200 bg-gray-50 px-4"
+          className="rounded-lg border border-gray-200 bg-gray-50"
         >
-          <AccordionTrigger className="hover:no-underline">
-            <div className="flex items-center">
-              <img
-                src={GOOGLECHAT}
-                alt="Google Chats"
-                className="mr-2 h-6 w-6"
-              />
-              Google Chats
+          <AccordionTrigger className="px-4 py-2 hover:no-underline">
+            <div className="flex w-full items-center justify-between">
+              <div className="flex items-center">
+                <img
+                  src={GOOGLECHAT}
+                  alt="Google Chats"
+                  className="mr-2 h-6 w-6"
+                />
+                <span>Google Chats</span>
+              </div>
               <Badge
                 variant="default"
-                className="ml-2.5 bg-[#5271ff] text-white"
+                className="mr-2.5 bg-[#5271ff] text-white"
               >
                 Coming Soon
               </Badge>
@@ -132,15 +129,17 @@ export default function Channels() {
 
         <AccordionItem
           value="email"
-          className="cursor-default rounded-lg border border-gray-200 bg-gray-50 px-4"
+          className="rounded-lg border border-gray-200 bg-gray-50"
         >
-          <AccordionTrigger className="hover:no-underline">
-            <div className="flex items-center">
-              <img src={GMAIL} alt="Email" className="mr-2 h-6 w-6" />
-              Email
+          <AccordionTrigger className="px-4 py-2 hover:no-underline">
+            <div className="flex w-full items-center justify-between">
+              <div className="flex items-center">
+                <img src={GMAIL} alt="Email" className="mr-2 h-6 w-6" />
+                <span>Email</span>
+              </div>
               <Badge
                 variant="default"
-                className="ml-2.5 bg-[#5271ff] text-white"
+                className="mr-2.5 bg-[#5271ff] text-white"
               >
                 Coming Soon
               </Badge>

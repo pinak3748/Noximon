@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Trash2 } from 'lucide-react';
 
@@ -8,6 +9,14 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
+import { useToast } from '@/components/ui/use-toast';
+import { AppDispatch, RootState } from '@/store';
+
+import {
+  addDockerContainer,
+  removeDockerContainer,
+  setSelectAllContainers,
+} from '../../features/homeSlice';
 
 interface DockerContainer {
   id: string;
@@ -15,37 +24,46 @@ interface DockerContainer {
 }
 
 export default function Docker() {
-  const [containers, setContainers] = useState<DockerContainer[]>([]);
+  const dispatch = useDispatch<AppDispatch>();
+  const { toast } = useToast();
+  const containers = useSelector(
+    (state: RootState) => state.home.dockerContainers
+  );
+  const selectAll = useSelector(
+    (state: RootState) => state.home.selectAllContainers
+  );
+
   const [showAddForm, setShowAddForm] = useState(false);
   const [newContainer, setNewContainer] = useState<string>('');
-  const [selectAll, setSelectAll] = useState(false);
 
   const handleAddContainer = () => {
     if (newContainer.trim()) {
-      setContainers([
-        ...containers,
-        { id: Date.now().toString(), name: newContainer.trim() },
-      ]);
+      dispatch(
+        addDockerContainer({
+          id: Date.now().toString(),
+          name: newContainer.trim(),
+        })
+      );
       setNewContainer('');
       setShowAddForm(false);
+      toast({
+        title: 'Container Added',
+        description: 'Your Docker container has been successfully added.',
+        variant: 'success',
+      });
     }
   };
 
   const handleSelectAll = (checked: boolean) => {
-    setSelectAll(checked);
-    if (checked) {
-      setContainers([{ id: 'all', name: 'All Containers (Auto-detected)' }]);
-    } else {
-      setContainers([]);
-    }
+    dispatch(setSelectAllContainers(checked));
   };
 
   const handleDeleteContainer = (id: string) => {
-    setContainers(containers.filter((container) => container.id !== id));
+    dispatch(removeDockerContainer(id));
   };
 
   return (
-    <div>
+    <div className="w-full max-w-full overflow-hidden text-gray-800">
       <SubSectionHeading
         heading="Docker Containers"
         subHeading="Select all containers or specify names to monitor"

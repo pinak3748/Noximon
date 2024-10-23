@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { SubSectionHeading } from '@/components/custom';
 import {
@@ -19,7 +20,10 @@ import {
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/components/ui/use-toast';
+import { AppDispatch, RootState } from '@/store';
 
+import { addApiRequest } from '../../features/homeSlice';
 import { ApiResponseStatus } from '../../features/homeType';
 
 interface APIRequest {
@@ -33,7 +37,9 @@ interface APIRequest {
 }
 
 export default function APIs() {
-  const [apiRequests, setApiRequests] = useState<APIRequest[]>([]);
+  const dispatch = useDispatch<AppDispatch>();
+  const { toast } = useToast();
+  const apiRequests = useSelector((state: RootState) => state.home.apiRequests);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newRequest, setNewRequest] = useState<APIRequest>({
     id: '',
@@ -49,10 +55,13 @@ export default function APIs() {
 
   const addNewRequest = () => {
     if (newRequest.name && newRequest.endpoint) {
-      setApiRequests([
-        ...apiRequests,
-        { ...newRequest, id: Date.now().toString() },
-      ]);
+      const newRequestWithId = { ...newRequest, id: Date.now().toString() };
+      dispatch(addApiRequest(newRequestWithId));
+      toast({
+        title: 'API Request Added',
+        description: 'Your API request has been successfully added.',
+        variant: 'success',
+      });
       setNewRequest({
         id: '',
         name: '',
@@ -65,7 +74,7 @@ export default function APIs() {
   };
 
   return (
-    <div>
+    <div className="w-full max-w-full overflow-hidden text-gray-800">
       <SubSectionHeading
         heading="API Requests"
         subHeading="Add and manage your API requests"
